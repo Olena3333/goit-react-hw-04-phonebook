@@ -52,7 +52,7 @@ export const App = () => {
 
       <ContactForm
         onAddContact={handleAddContact}
-        // contacts={this.state.contacts}
+        // contacts={contacts}
       />
       <h2>Contacts</h2>
       <Filter filter={filter} onFilterChange={handelOnFilter} />

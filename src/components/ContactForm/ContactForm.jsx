@@ -1,74 +1,67 @@
-import React from 'react';
-import { nanoid } from 'nanoid';
+import React, { useState } from 'react';
 import propTypes from 'prop-types';
 import { StyledInput, StyledForm } from './ContactForm.styled';
 import { StyledButton } from '../App.styled';
-export class ContactForm extends React.Component {
-  static propTypes = {
-    onAddContact: propTypes.func.isRequired,
-    // contacts: propTypes.array.isRequired,
-  };
+import { nanoid } from 'nanoid';
+export const ContactForm = ({ onAddContact }) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  state = {
-    name: '',
-    number: '',
-  };
-
-  handelOnChange = e => {
+  const handelOnChange = e => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+
+    if (name === 'name') {
+      setName(value);
+    } else if (name === 'number') {
+      setNumber(value);
+    }
   };
-
-  handelOnSubmit = e => {
+  const handelOnSubmit = e => {
     e.preventDefault();
-
-    const { name, number } = this.state;
-    const { onAddContact } = this.props;
 
     const newContact = {
       number: number.trim(),
       name: name.trim(),
       id: nanoid(),
     };
+
     if (!name.trim()) {
       return;
     }
 
     onAddContact(newContact);
 
-    this.setState({
-      name: '',
-      number: '',
-    });
+    setName('');
+    setNumber('');
   };
-
-  render() {
-    return (
-      <StyledForm onSubmit={this.handelOnSubmit}>
-        <label>
-          Name:
-          <StyledInput
-            type="text"
-            placeholder="Enter the name "
-            onChange={this.handelOnChange}
-            value={this.state.name}
-            name="name"
-            required
-          />
-        </label>
-        <label>
-          Number:
-          <StyledInput
-            onChange={this.handelOnChange}
-            value={this.state.number}
-            placeholder="Enter the number"
-            type="tel"
-            name="number"
-            required
-          />
-        </label>
-        <StyledButton disabled={!this.state.name}>Add contact</StyledButton>
-      </StyledForm>
-    );
-  }
-}
+  return (
+    <StyledForm onSubmit={handelOnSubmit}>
+      <label>
+        Name:
+        <StyledInput
+          type="text"
+          placeholder="Enter the name "
+          onChange={handelOnChange}
+          value={name}
+          name="name"
+          required
+        />
+      </label>
+      <label>
+        Number:
+        <StyledInput
+          onChange={handelOnChange}
+          value={number}
+          placeholder="Enter the number"
+          type="tel"
+          name="number"
+          required
+        />
+      </label>
+      <StyledButton disabled={!name}>Add contact</StyledButton>
+    </StyledForm>
+  );
+};
+ContactForm.propTypes = {
+  onAddContact: propTypes.func.isRequired,
+};
